@@ -31,7 +31,7 @@ async function sendDingDing(params: {
       }
     }
   };
-  console.log(message);
+  console.log(`${product}新功能发布`);
   axios.post(process.env.DINGDING_HOOK!, message);
 }
 
