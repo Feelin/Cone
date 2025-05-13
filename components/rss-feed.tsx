@@ -25,7 +25,7 @@ export const statusMap: {[key: string]: string} = {
 
 function ListItem({ item, index }: any) {
   const searchParams = useSearchParams()
-  const source = searchParams?.get("source") || defaultSource
+  const source = searchParams?.get("source") || defaultSource.name;
   const addHost = (content: string) => {
     const host = findSourceByName(source)?.url.split("/")[2]
     return content.replace(/<img[^>]*>/g, (match) => {
