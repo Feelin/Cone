@@ -27,7 +27,7 @@ function ListItem({ item, index }: any) {
   const searchParams = useSearchParams()
   const source = searchParams?.get("source") || defaultSource.name;
   const addHost = (content: string) => {
-    const host = findSourceByName(source)?.url.split("/")[2]
+    const host = defaultSource.url.split("/")[2]
     return content.replace(/<img[^>]*>/g, (match) => {
       return match.replace(/src="([^"]+)"/, `src="https://${host}$1"`)
     }).replace(/<source[^>]*>/g, (match) => {
@@ -134,7 +134,6 @@ function ListItem({ item, index }: any) {
 
 export function RssFeed() {
   const searchParams = useSearchParams()
-  const hash = window.location.hash.replace("#", "");
   const source = searchParams?.get("source") || defaultSource.name
   const displayTitle = source || defaultSource.name;
   const status = searchParams?.get("status");
@@ -155,13 +154,14 @@ export function RssFeed() {
   }
 
   useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
     if (hash) {
       const element = document.getElementById(hash);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
     }
-  }, [hash]); 
+  }, []); 
 
   return (
     <div className="space-y-6">
