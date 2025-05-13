@@ -21,7 +21,7 @@ async function sendDingDing(params: {
       title: `${product}新功能发布`,
       text: `### ${product}新功能发布 \n\n ${
           features.map((item: {title: string, hash: string}) => {
-          return `- [${item.title}](https://cone-seven.vercel.app/?source=${product}#${item.hash}) `
+          return `- [${item.title.replaceAll(/\W/g, ' ')}](https://cone-seven.vercel.app/?source=${product}#${item.hash}) `
         }).join('\n')
       }
       `,
