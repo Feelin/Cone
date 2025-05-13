@@ -48,20 +48,32 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
         // Process each feature
         for (const feature of features) {
           if (!feature) continue;
-          
+
           const $feature = cheerio.load(feature);
           const title = $feature(product.tag).first().text().trim();
           if (!title) continue;
+          
+         // if title exists, skip
+          const titleExist = await db.feature.findFirst({
+            where: { 
+              title,
+              product: product.name
+             }
+          });
+          if (titleExist) continue;
           // remove title
           const content = $feature.html().replace($feature(product.tag).first(), '');
         
     
           // if hash exists, skip
           const hash = createHash('sha256').update(content).digest('hex');
-          const existing = await db.feature.findFirst({
-            where: { hash }
+          const hashExist = await db.feature.findFirst({
+            where: { 
+              hash
+             }
           });
-          if (existing) continue;
+          if (hashExist) continue;
+
           const summary = await generateSummary(title, content);
           // Save to database
           await db.feature.create({
