@@ -69,7 +69,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
               title,
               content,
               product: product.name,
-              status: 0,
+              status: 1,
               link: product.url,
               hash,
               summary
