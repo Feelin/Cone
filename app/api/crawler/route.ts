@@ -31,7 +31,13 @@ async function sendDingDing(params: {
     }
   };
   
-  await axios.post(process.env.DINGDING_HOOK!, message).then(() => {
+  await fetch(process.env.DINGDING_HOOK!, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  }).then(() => {
     console.log(`${product}通知发送成功`);
   }).catch((error) => {
     console.error(`${product}通知发送失败`, error);
