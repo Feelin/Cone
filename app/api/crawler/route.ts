@@ -134,7 +134,7 @@ export async function GET(request: Request) {
 
           const summary = await generateSummary(title, content);
           // Save to database
-          const feature: any = await db.feature.create({
+          const result: any = await db.feature.create({
             data: {
               title,
               content,
@@ -146,7 +146,7 @@ export async function GET(request: Request) {
             }
           });
           featureList[product.name] = featureList[product.name] || [];
-          featureList[product.name].push({title, id: feature.id})
+          featureList[product.name].push({title, id: result.id})
         }
     }
 
