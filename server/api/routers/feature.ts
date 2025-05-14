@@ -1,7 +1,6 @@
 import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { generateSummary } from "@/pages/api/summary";
+import { generateSummary } from "@/app/api/crawler/route";
 
 export const featureRouter = createTRPCRouter({
   query: publicProcedure.input(z.object({ product: z.string(), status: z.array(z.number()).optional() })).query(async ({ ctx, input }) => {
