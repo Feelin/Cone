@@ -33,7 +33,11 @@ async function sendDingDing(params: {
   console.log(`${product}新功能发布`);
   console.log(process.env.DINGDING_HOOK);
   console.log(message);
-  axios.post(process.env.DINGDING_HOOK!, message);
+  axios.post(process.env.DINGDING_HOOK!, message).then((res) => {
+    console.log(res);
+  }).catch(err => {
+    console.error(err);
+  });
 }
 
 
