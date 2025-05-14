@@ -23,7 +23,7 @@ export const statusMap: {[key: string]: string} = {
 
 
 
-function ListItem({ item, index }: any) {
+function ListItem({ item, index, id }: any) {
   const searchParams = useSearchParams()
   const source = searchParams?.get("source") || defaultSource.name;
   const addHost = (content: string) => {
@@ -45,7 +45,7 @@ function ListItem({ item, index }: any) {
   const {mutate: updateComment, isPending: updateCommentPending} = api.feature.setComment.useMutation();
 
   return (
-    <Card key={item.id} className="feed-card relative">
+    <Card key={item.id} className="feed-card relative" id={id}>
       <div className="absolute -left-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold shadow-md">
         {index + 1}
       </div>
@@ -154,14 +154,20 @@ export function RssFeed() {
   }
 
   useEffect(() => {
-    const hash = window.location.hash.replace("#", "");
-    if (hash) {
-      const element = document.getElementById(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+    if (!isLoading && features) {
+      const hash = window.location.hash.replace("#", "");
+      if (hash) {
+        // Small timeout to ensure the DOM is fully updated
+        const timer = setTimeout(() => {
+          const element = document.getElementById(hash);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100);
+        return () => clearTimeout(timer);
       }
     }
-  }, []); 
+  }, [isLoading, features]);
 
   return (
     <div className="space-y-6">
@@ -195,7 +201,7 @@ export function RssFeed() {
         </div>
       ) : (
         <div className="space-y-6">
-          {features?.map((item, index) => <ListItem key={item.id} item={item} index={index} id={item.hash}></ListItem>)}
+          {features?.map((item, index) => <ListItem key={item.id} item={item} index={index} id={item.id}></ListItem>)}
         </div>
       )}
     </div>

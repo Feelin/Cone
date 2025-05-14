@@ -11,7 +11,7 @@ import { after } from "next/server";
 
 async function sendDingDing(params: {
   product: string;
-  features: {title: string, hash: string}[];
+  features: {title: string, id: string}[];
 }) {
   const { product, features } = params;
   const message = {
@@ -19,8 +19,8 @@ async function sendDingDing(params: {
     markdown: {
       title: `${product}新功能发布`,
       text: `### ${product}新功能发布 \n\n ${
-          features.map((item: {title: string, hash: string}) => {
-          return `- [${item.title.replaceAll(/\W/g, ' ')}](https://cone-seven.vercel.app/?source=${encodeURIComponent(product)}#${encodeURIComponent(item.hash)}) `
+          features.map((item: {title: string, id: string}) => {
+          return `- [${item.title.replaceAll(/\W/g, ' ')}](https://cone-seven.vercel.app/?source=${encodeURIComponent(product)}#${encodeURIComponent(item.id)}) `
         }).join('\n')
       }
       `,
@@ -94,7 +94,7 @@ export async function generateSummary(title: string | null | undefined, content:
 }
 
 export async function GET(request: Request) {
-    const featureList: {[key: string]: {title: string, hash: string}[]} = {};
+    const featureList: {[key: string]: {title: string, id: string}[]} = {};
     async function fetchContent(product: Source) {
         console.log(`crawel form ${product.name}`);
         const { $ } = await cheerioReq(product.url);
@@ -134,7 +134,7 @@ export async function GET(request: Request) {
 
           const summary = await generateSummary(title, content);
           // Save to database
-          await db.feature.create({
+          const feature: any = await db.feature.create({
             data: {
               title,
               content,
@@ -146,7 +146,7 @@ export async function GET(request: Request) {
             }
           });
           featureList[product.name] = featureList[product.name] || [];
-          featureList[product.name].push({title, hash})
+          featureList[product.name].push({title, id: feature.id})
         }
     }
 
