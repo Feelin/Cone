@@ -31,7 +31,7 @@ async function sendDingDing(params: {
     }
   };
   
-  await fetch(process.env.DINGDING_HOOK!, {
+  return await fetch(process.env.DINGDING_HOOK!, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
