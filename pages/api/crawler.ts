@@ -1,3 +1,4 @@
+import { after } from 'next/server';
 import { NextApiRequest, NextApiResponse } from "next";
 import {db} from '@/server/db';
 import { createHash } from "crypto";
@@ -92,16 +93,18 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
         }
     }
 
-    const promises = sources.map(async (source) => {
-      return await fetchContent(source)
-    })
-    await Promise.all(promises)
-    Object.entries(featureList).forEach(([product, features]) => {
-      sendDingDing({
-        product,
-        features
+    after(async () => {
+      const promises = sources.map(async (source) => {
+        return await fetchContent(source)
       })
-    })
+      await Promise.all(promises)
+      Object.entries(featureList).forEach(([product, features]) => {
+        sendDingDing({
+          product,
+          features
+        })
+      })
+    });
     
     return res.status(200).json({message: 'Scheduled task executed successfully.'})
 }
